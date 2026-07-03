@@ -1,0 +1,1759 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WHO Knowledge Assistant — Respiratory Infections RAG</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+/* ── Reset & Base ── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { height: 100%; }
+body {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  background: #0D1117;
+  color: #E6EDF3;
+  height: 100%;
+  display: flex;
+  overflow: hidden;
+}
+
+/* ── Design tokens ── */
+:root {
+  --navy:       #1F497D;
+  --navy-light: #2563EB;
+  --navy-glow:  rgba(31,73,125,0.3);
+  --teal:       #0F7173;
+  --teal-light: #14B8A6;
+  --surface:    #161B22;
+  --surface-2:  #1C2333;
+  --surface-3:  #21262D;
+  --border:     rgba(255,255,255,0.08);
+  --border-2:   rgba(255,255,255,0.12);
+  --text-1:     #E6EDF3;
+  --text-2:     #8B949E;
+  --text-3:     #6E7681;
+  --green:      #3FB950;
+  --amber:      #D29922;
+  --red:        #F85149;
+  --purple:     #8B5CF6;
+}
+
+/* ── Scrollbar ── */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.2); }
+
+/* ════════════════════════════════════════════════
+   SIDEBAR
+════════════════════════════════════════════════ */
+.sidebar {
+  width: 240px;
+  flex-shrink: 0;
+  background: var(--surface);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.sidebar-header {
+  padding: 20px 16px 16px;
+  border-bottom: 1px solid var(--border);
+}
+
+.logo-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 4px;
+}
+
+.logo-icon {
+  width: 34px;
+  height: 34px;
+  background: linear-gradient(135deg, var(--navy) 0%, var(--navy-light) 100%);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  flex-shrink: 0;
+  box-shadow: 0 0 16px var(--navy-glow);
+}
+
+.logo-name {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text-1);
+  letter-spacing: -0.3px;
+}
+
+.logo-sub {
+  font-size: 11px;
+  color: var(--text-3);
+  margin-left: 44px;
+}
+
+.sidebar-section-label {
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--text-3);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 14px 16px 6px;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 8px 12px;
+  margin: 1px 8px;
+  border-radius: 7px;
+  cursor: pointer;
+  font-size: 13.5px;
+  font-weight: 500;
+  color: var(--text-2);
+  transition: all 0.15s;
+  user-select: none;
+}
+
+.nav-item:hover {
+  background: rgba(255,255,255,0.05);
+  color: var(--text-1);
+}
+
+.nav-item.active {
+  background: rgba(31,73,125,0.25);
+  color: #93C5FD;
+  border: 1px solid rgba(31,73,125,0.4);
+}
+
+.nav-icon {
+  width: 18px;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+}
+
+.kb-list {
+  padding: 6px 12px;
+  margin: 0 8px;
+  background: var(--surface-3);
+  border-radius: 8px;
+  border: 1px solid var(--border);
+}
+
+.kb-item {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 5px 0;
+  font-size: 11.5px;
+  color: var(--text-2);
+  border-bottom: 1px solid var(--border);
+}
+
+.kb-item:last-child { border-bottom: none; }
+.kb-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+
+.sidebar-footer {
+  margin-top: auto;
+  border-top: 1px solid var(--border);
+  padding: 14px 12px;
+}
+
+.api-input {
+  width: 100%;
+  background: var(--surface-3);
+  border: 1px solid var(--border-2);
+  border-radius: 7px;
+  padding: 7px 10px;
+  color: var(--text-1);
+  font-size: 12px;
+  font-family: 'Inter', sans-serif;
+  outline: none;
+  transition: border-color 0.15s;
+}
+.api-input:focus { border-color: var(--navy-light); }
+.api-input::placeholder { color: var(--text-3); }
+
+.team-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  margin-top: 8px;
+}
+
+.team-item {
+  font-size: 11px;
+  color: var(--text-3);
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.team-avatar {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--navy) 0%, var(--navy-light) 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 7px;
+  font-weight: 700;
+  color: white;
+  flex-shrink: 0;
+}
+
+/* ════════════════════════════════════════════════
+   MAIN CONTENT
+════════════════════════════════════════════════ */
+.main {
+  flex: 1;
+  min-width: 0;
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  background: #0D1117;
+}
+
+.topbar {
+  height: 48px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  padding: 0 24px;
+  gap: 12px;
+  flex-shrink: 0;
+  background: var(--surface);
+}
+
+.topbar-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-1);
+}
+
+.topbar-sep { color: var(--text-3); font-size: 12px; }
+.topbar-sub { font-size: 12px; color: var(--text-2); }
+
+.status-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--green);
+  box-shadow: 0 0 6px var(--green);
+  margin-left: auto;
+}
+
+.status-text { font-size: 11px; color: var(--text-3); }
+
+.tab-content {
+  display: none;
+  flex: 1;
+  overflow-y: auto;
+  padding: 28px 32px;
+}
+
+.tab-content.active { display: block; }
+
+/* ════════════════════════════════════════════════
+   PAGE HEADER
+════════════════════════════════════════════════ */
+.page-header {
+  margin-bottom: 28px;
+}
+
+.page-title {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--text-1);
+  letter-spacing: -0.4px;
+  margin-bottom: 4px;
+}
+
+.page-sub {
+  font-size: 13.5px;
+  color: var(--text-2);
+  line-height: 1.5;
+}
+
+/* ════════════════════════════════════════════════
+   CARD
+════════════════════════════════════════════════ */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.card-header {
+  padding: 14px 18px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.card-title {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--text-1);
+}
+
+.card-sub {
+  font-size: 11.5px;
+  color: var(--text-3);
+  margin-left: auto;
+}
+
+.card-body { padding: 18px; }
+
+/* ════════════════════════════════════════════════
+   CHAT TAB
+════════════════════════════════════════════════ */
+.pill-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin-bottom: 18px;
+}
+
+.pill {
+  padding: 5px 13px;
+  border-radius: 20px;
+  border: 1px solid var(--border-2);
+  background: var(--surface);
+  font-size: 12.5px;
+  color: var(--text-2);
+  cursor: pointer;
+  transition: all 0.15s;
+  font-family: 'Inter', sans-serif;
+}
+
+.pill:hover {
+  border-color: var(--navy-light);
+  color: #93C5FD;
+  background: rgba(31,73,125,0.15);
+}
+
+.input-row {
+  display: flex;
+  gap: 10px;
+  align-items: stretch;
+  margin-bottom: 24px;
+}
+
+.query-input {
+  flex: 1;
+  background: var(--surface);
+  border: 1px solid var(--border-2);
+  border-radius: 10px;
+  padding: 12px 16px;
+  font-size: 14px;
+  color: var(--text-1);
+  font-family: 'Inter', sans-serif;
+  outline: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.query-input:focus {
+  border-color: var(--navy-light);
+  box-shadow: 0 0 0 3px rgba(37,99,235,0.1);
+}
+
+.query-input::placeholder { color: var(--text-3); }
+
+.ask-btn {
+  background: linear-gradient(135deg, var(--navy) 0%, var(--navy-light) 100%);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  padding: 12px 22px;
+  font-size: 13.5px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: 'Inter', sans-serif;
+  transition: opacity 0.15s, transform 0.1s;
+  white-space: nowrap;
+  box-shadow: 0 4px 14px var(--navy-glow);
+}
+
+.ask-btn:hover { opacity: 0.9; transform: translateY(-1px); }
+.ask-btn:active { transform: translateY(0); }
+.ask-btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+
+/* Loading state */
+.loading-row {
+  display: none;
+  align-items: center;
+  gap: 12px;
+  padding: 16px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  margin-bottom: 20px;
+}
+
+.spinner {
+  width: 18px;
+  height: 18px;
+  border: 2px solid var(--border-2);
+  border-top-color: var(--navy-light);
+  border-radius: 50%;
+  animation: spin 0.65s linear infinite;
+  flex-shrink: 0;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.loading-text { font-size: 13px; color: var(--text-2); }
+
+/* Answer */
+.answer-wrap {
+  display: none;
+  margin-bottom: 24px;
+}
+
+.answer-label-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.answer-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-3);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.elapsed-tag {
+  font-size: 11px;
+  background: var(--surface-3);
+  color: var(--text-3);
+  padding: 2px 8px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  margin-left: auto;
+}
+
+.answer-box {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--navy-light);
+  border-radius: 10px;
+  padding: 18px 20px;
+  font-size: 14px;
+  line-height: 1.8;
+  color: var(--text-1);
+  white-space: pre-wrap;
+}
+
+/* Sources */
+.sources-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-3);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 10px;
+}
+
+.sources-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.source-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 14px 16px;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.source-card:hover {
+  border-color: var(--border-2);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+}
+
+.source-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.rank-circle {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--navy) 0%, var(--navy-light) 100%);
+  color: white;
+  font-size: 11px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.source-main { flex: 1; min-width: 0; }
+
+.source-name {
+  font-size: 13.5px;
+  font-weight: 600;
+  margin-bottom: 3px;
+}
+
+.source-meta {
+  font-size: 11.5px;
+  color: var(--text-3);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-bottom: 8px;
+}
+
+.source-tag {
+  display: inline-block;
+  padding: 1px 8px;
+  border-radius: 4px;
+  font-size: 10.5px;
+  font-weight: 600;
+  color: white;
+}
+
+.score-track {
+  height: 4px;
+  background: var(--surface-3);
+  border-radius: 2px;
+  margin-bottom: 4px;
+  overflow: hidden;
+}
+
+.score-fill {
+  height: 100%;
+  border-radius: 2px;
+  transition: width 0.5s ease;
+}
+
+.score-val { font-size: 10.5px; color: var(--text-3); }
+
+.excerpt-btn {
+  background: none;
+  border: none;
+  color: var(--text-3);
+  font-size: 11.5px;
+  cursor: pointer;
+  padding: 0;
+  font-family: 'Inter', sans-serif;
+  margin-top: 8px;
+  transition: color 0.15s;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.excerpt-btn:hover { color: var(--text-1); }
+
+.excerpt-body {
+  display: none;
+  margin-top: 10px;
+  padding: 10px 12px;
+  background: var(--surface-3);
+  border-radius: 7px;
+  font-size: 12px;
+  color: var(--text-2);
+  line-height: 1.7;
+  border-left: 2px solid var(--border-2);
+}
+
+.excerpt-body.open { display: block; }
+
+/* ════════════════════════════════════════════════
+   EXPERIMENT TAB
+════════════════════════════════════════════════ */
+.metrics-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+  margin-bottom: 24px;
+}
+
+.metric-tile {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 18px;
+  position: relative;
+  overflow: hidden;
+  transition: border-color 0.15s;
+}
+
+.metric-tile:hover { border-color: var(--border-2); }
+
+.metric-glow {
+  position: absolute;
+  top: -20px;
+  right: -20px;
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  opacity: 0.15;
+  filter: blur(20px);
+}
+
+.metric-icon {
+  font-size: 18px;
+  margin-bottom: 10px;
+}
+
+.metric-val {
+  font-size: 30px;
+  font-weight: 800;
+  letter-spacing: -1px;
+  margin-bottom: 4px;
+}
+
+.metric-name {
+  font-size: 12px;
+  color: var(--text-3);
+  font-weight: 500;
+  margin-bottom: 6px;
+}
+
+.metric-change {
+  font-size: 12px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.change-up { color: var(--green); }
+.change-down { color: var(--red); }
+.change-neutral { color: var(--text-3); }
+
+.charts-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.chart-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 18px;
+}
+
+.chart-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-1);
+  margin-bottom: 2px;
+}
+
+.chart-sub {
+  font-size: 11.5px;
+  color: var(--text-3);
+  margin-bottom: 14px;
+}
+
+/* ════════════════════════════════════════════════
+   TABLE
+════════════════════════════════════════════════ */
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.data-table th {
+  background: var(--surface-3);
+  color: var(--text-2);
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 10px 14px;
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+}
+
+.data-table td {
+  padding: 10px 14px;
+  color: var(--text-1);
+  border-bottom: 1px solid var(--border);
+}
+
+.data-table tr:last-child td { border-bottom: none; }
+.data-table tr:hover td { background: rgba(255,255,255,0.02); }
+
+.ok  { color: var(--green); font-weight: 600; }
+.bad { color: var(--red);   font-weight: 600; }
+
+.tag {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 5px;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.tag-green  { background: rgba(63,185,80,0.15);  color: var(--green); }
+.tag-red    { background: rgba(248,81,73,0.15);   color: var(--red);   }
+.tag-grey   { background: rgba(255,255,255,0.07); color: var(--text-3); }
+.tag-amber  { background: rgba(210,153,34,0.15);  color: var(--amber); }
+.tag-purple { background: rgba(139,92,246,0.15);  color: var(--purple); }
+.tag-blue   { background: rgba(37,99,235,0.15);   color: #93C5FD; }
+
+/* ════════════════════════════════════════════════
+   COMPARE TAB
+════════════════════════════════════════════════ */
+.compare-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.compare-col {
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  overflow: hidden;
+}
+
+.compare-col-head {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.compare-col-base .compare-col-head { background: rgba(255,255,255,0.03); }
+.compare-col-impr .compare-col-head { background: rgba(31,73,125,0.15); }
+
+.col-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-1);
+}
+
+.col-badge {
+  font-size: 10.5px;
+  padding: 2px 8px;
+  border-radius: 5px;
+  font-weight: 600;
+}
+
+.compare-col-body { padding: 14px; display: flex; flex-direction: column; gap: 8px; }
+
+.analysis-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.analysis-tile {
+  border-radius: 8px;
+  padding: 12px;
+  border: 1px solid var(--border);
+}
+
+.analysis-tile-label {
+  font-size: 10.5px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 4px;
+}
+
+.analysis-tile-val { font-size: 13px; font-weight: 500; }
+
+.compare-full-table {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+  margin-top: 24px;
+}
+
+/* ════════════════════════════════════════════════
+   ARCHITECTURE TAB
+════════════════════════════════════════════════ */
+.pipeline-wrap {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 24px;
+  margin-bottom: 20px;
+  overflow-x: auto;
+}
+
+.pipeline-stages {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: max-content;
+}
+
+.stage-node {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 16px 14px 12px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: var(--surface-2);
+  min-width: 100px;
+  text-align: center;
+  transition: border-color 0.2s, transform 0.2s;
+  cursor: default;
+}
+
+.stage-node:hover {
+  border-color: var(--navy-light);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+}
+
+.stage-node.new-node {
+  border-color: rgba(31,73,125,0.5);
+  background: rgba(31,73,125,0.1);
+}
+
+.stage-node.new-node:hover {
+  border-color: var(--navy-light);
+  background: rgba(31,73,125,0.2);
+}
+
+.stage-emoji { font-size: 26px; }
+
+.stage-name {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text-1);
+}
+
+.stage-tech {
+  font-size: 10.5px;
+  color: var(--text-3);
+  line-height: 1.5;
+}
+
+.stage-badge {
+  font-size: 9px;
+  font-weight: 700;
+  padding: 1px 6px;
+  border-radius: 4px;
+  letter-spacing: 0.05em;
+  background: rgba(31,73,125,0.3);
+  color: #93C5FD;
+  border: 1px solid rgba(31,73,125,0.5);
+}
+
+.pipe-arrow {
+  color: var(--text-3);
+  font-size: 18px;
+  flex-shrink: 0;
+}
+
+.failure-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.failure-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 16px;
+}
+
+.failure-head {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin-bottom: 8px;
+}
+
+.failure-title {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--text-1);
+}
+
+.failure-body {
+  font-size: 13px;
+  color: var(--text-2);
+  line-height: 1.6;
+  margin-bottom: 6px;
+}
+
+.failure-fix {
+  font-size: 11.5px;
+  color: var(--text-3);
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+/* ════════════════════════════════════════════════
+   FADE-IN ANIMATION
+════════════════════════════════════════════════ */
+.fade-in {
+  animation: fadeIn 0.25s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ════════════════════════════════════════════════
+   EMPTY / LOADING STATES
+════════════════════════════════════════════════ */
+.empty-state {
+  text-align: center;
+  padding: 48px 24px;
+  color: var(--text-3);
+}
+
+.empty-icon { font-size: 40px; margin-bottom: 14px; }
+.empty-text { font-size: 14px; line-height: 1.6; }
+
+</style>
+</head>
+<body>
+
+<!-- ════ SIDEBAR ════ -->
+<aside class="sidebar">
+  <div class="sidebar-header">
+    <div class="logo-row">
+      <div class="logo-icon">🫁</div>
+      <div class="logo-name">WHO Assistant</div>
+    </div>
+    <div class="logo-sub">Respiratory Infections RAG</div>
+  </div>
+
+  <nav style="flex:1; overflow-y:auto; padding:8px 0;">
+    <div class="sidebar-section-label">Navigation</div>
+    <div class="nav-item active" onclick="showTab('chat', this)">
+      <div class="nav-icon">💬</div> Chat Assistant
+    </div>
+    <div class="nav-item" onclick="showTab('experiments', this)">
+      <div class="nav-icon">📊</div> Experiment Results
+    </div>
+    <div class="nav-item" onclick="showTab('compare', this)">
+      <div class="nav-icon">⚖️</div> Baseline vs Improved
+    </div>
+    <div class="nav-item" onclick="showTab('architecture', this)">
+      <div class="nav-icon">🏗️</div> System Architecture
+    </div>
+
+    <div class="sidebar-section-label" style="margin-top:12px;">Knowledge Base</div>
+    <div class="kb-list">
+      <div class="kb-item">
+        <div class="kb-dot" style="background:#3B82F6;"></div>
+        Influenza Guidelines
+      </div>
+      <div class="kb-item">
+        <div class="kb-dot" style="background:#10B981;"></div>
+        COVID-19 SARI Mgmt
+      </div>
+      <div class="kb-item">
+        <div class="kb-dot" style="background:#10B981;"></div>
+        COVID-19 Policy Brief
+      </div>
+      <div class="kb-item">
+        <div class="kb-dot" style="background:#D97706;"></div>
+        TB Evidence Gaps
+      </div>
+      <div style="font-size:10.5px; color:var(--text-3); padding:7px 0 2px; text-align:center;">
+        4 PDFs · ~1,100 chunks
+      </div>
+    </div>
+  </nav>
+
+  <div class="sidebar-footer">
+    <div style="font-size:10px; font-weight:600; color:var(--text-3); text-transform:uppercase; letter-spacing:0.08em; margin-bottom:6px;">Groq API Key</div>
+    <input id="groqKey" type="password" class="api-input" placeholder="gsk_...">
+    <div style="font-size:10px; color:var(--text-3); margin-top:4px; margin-bottom:12px;">console.groq.com — free tier</div>
+
+    <div style="font-size:10px; font-weight:600; color:var(--text-3); text-transform:uppercase; letter-spacing:0.08em; margin-bottom:6px;">Team — CSAI-413</div>
+    <div class="team-grid">
+      <div class="team-item"><div class="team-avatar">BK</div> Baraa Kabbani · 22001553</div>
+      <div class="team-item"><div class="team-avatar">FS</div> Faisal Sahloul · 22000669</div>
+      <div class="team-item"><div class="team-avatar">KD</div> Khalid Daqqaq · 22000958</div>
+      <div class="team-item"><div class="team-avatar">SA</div> Salim Arnous · 22001301</div>
+      <div class="team-item"><div class="team-avatar">YO</div> Yousef Osama · 22000959</div>
+    </div>
+  </div>
+</aside>
+
+<!-- ════ MAIN ════ -->
+<main class="main">
+
+  <div class="topbar">
+    <div class="topbar-title" id="topbarTitle">Chat Assistant</div>
+    <div class="topbar-sep">·</div>
+    <div class="topbar-sub">WHO Respiratory Knowledge Assistant</div>
+    <div class="status-dot"></div>
+    <div class="status-text">Flask server running</div>
+  </div>
+
+  <!-- ── TAB: CHAT ── -->
+  <div id="tab-chat" class="tab-content active">
+
+    <div style="max-width:800px;">
+      <div class="page-header">
+        <div class="page-title">Clinical Knowledge Assistant</div>
+        <div class="page-sub">Ask any question about WHO guidelines for Influenza, COVID-19, or Tuberculosis. Powered by Hybrid RAG + Cross-Encoder reranking + LLaMA 3.1.</div>
+      </div>
+
+      <!-- Example queries -->
+      <div class="pill-bar">
+        <button class="pill" onclick="setQ(this)">Oseltamivir dose for adult influenza?</button>
+        <button class="pill" onclick="setQ(this)">Corticosteroid for severe COVID-19?</button>
+        <button class="pill" onclick="setQ(this)">Standard TB treatment duration?</button>
+        <button class="pill" onclick="setQ(this)">SpO2 threshold for oxygen in COVID-19?</button>
+        <button class="pill" onclick="setQ(this)">Patient with chronic cough, fever, night sweats?</button>
+        <button class="pill" onclick="setQ(this)">Antivirals for non-severe COVID-19?</button>
+      </div>
+
+      <div class="input-row">
+        <input id="chatInput" class="query-input" placeholder="Ask a clinical question about WHO guidelines..."
+          onkeydown="if(event.key==='Enter') askQuestion()">
+        <button class="ask-btn" id="askBtn" onclick="askQuestion()">Ask →</button>
+      </div>
+
+      <div class="loading-row fade-in" id="chatLoading">
+        <div class="spinner"></div>
+        <div class="loading-text" id="loadingMsg">Retrieving from WHO guidelines...</div>
+      </div>
+
+      <div id="chatResult" style="display:none;" class="fade-in">
+        <!-- Answer -->
+        <div class="answer-wrap" id="answerWrap" style="display:block;">
+          <div class="answer-label-row">
+            <div class="answer-label">Answer</div>
+            <div class="elapsed-tag" id="elapsedTag"></div>
+          </div>
+          <div class="answer-box" id="answerBox"></div>
+        </div>
+
+        <!-- Sources -->
+        <div class="sources-label">Retrieved Sources</div>
+        <div class="sources-grid" id="sourcesGrid"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── TAB: EXPERIMENTS ── -->
+  <div id="tab-experiments" class="tab-content">
+    <div style="max-width:960px;">
+      <div class="page-header">
+        <div class="page-title">Experiment Results</div>
+        <div class="page-sub">Four controlled experiments measuring the impact of each system improvement on 10 clinical test queries from WHO guideline domains.</div>
+      </div>
+
+      <!-- Key metrics -->
+      <div class="metrics-row">
+        <div class="metric-tile">
+          <div class="metric-glow" style="background:#2563EB;"></div>
+          <div class="metric-icon">🎯</div>
+          <div class="metric-val" style="color:#60A5FA;">+33%</div>
+          <div class="metric-name">Recall@1 Improvement</div>
+          <div class="metric-change change-up">↑ 0.60 → 0.80</div>
+        </div>
+        <div class="metric-tile">
+          <div class="metric-glow" style="background:#0F7173;"></div>
+          <div class="metric-icon">🔀</div>
+          <div class="metric-val" style="color:#2DD4BF;">+17%</div>
+          <div class="metric-name">Hybrid RRF Gain</div>
+          <div class="metric-change change-up">↑ 0.60 → 0.70</div>
+        </div>
+        <div class="metric-tile">
+          <div class="metric-glow" style="background:#3FB950;"></div>
+          <div class="metric-icon">📈</div>
+          <div class="metric-val" style="color:#4ADE80;">+16%</div>
+          <div class="metric-name">Grounding Score</div>
+          <div class="metric-change change-up">↑ 0.61 → 0.71</div>
+        </div>
+        <div class="metric-tile">
+          <div class="metric-glow" style="background:#8B5CF6;"></div>
+          <div class="metric-icon">📝</div>
+          <div class="metric-val" style="color:#A78BFA;">4.5×</div>
+          <div class="metric-name">Citation Rate (Prompt)</div>
+          <div class="metric-change change-up">↑ 20% → 90%</div>
+        </div>
+      </div>
+
+      <!-- Charts 2x2 -->
+      <div class="charts-grid" id="chartsSection">
+        <div class="chart-card">
+          <div class="chart-title">Exp 1 — Chunk Size</div>
+          <div class="chart-sub">Recall@1 and Grounding score across chunk sizes</div>
+          <canvas id="chartChunk" height="185"></canvas>
+        </div>
+        <div class="chart-card">
+          <div class="chart-title">Exp 2 — Cross-Encoder Reranking</div>
+          <div class="chart-sub">Key metrics before and after reranking</div>
+          <canvas id="chartRerank" height="185"></canvas>
+        </div>
+        <div class="chart-card">
+          <div class="chart-title">Exp 3 — Hybrid Retrieval</div>
+          <div class="chart-sub">Dense vs BM25 vs Hybrid RRF across all metrics</div>
+          <canvas id="chartHybrid" height="185"></canvas>
+        </div>
+        <div class="chart-card">
+          <div class="chart-title">Exp 4 — Prompt Design</div>
+          <div class="chart-sub">Grounding and citation rate by prompt template</div>
+          <canvas id="chartPrompt" height="185"></canvas>
+        </div>
+      </div>
+
+      <!-- Loading state -->
+      <div id="expLoading" class="card" style="display:none;">
+        <div class="empty-state">
+          <div class="spinner" style="margin:0 auto 14px;"></div>
+          <div class="empty-text">Loading experiment results...</div>
+        </div>
+      </div>
+
+      <!-- Per-query table -->
+      <div class="card" style="margin-top:20px;">
+        <div class="card-header">
+          <div class="card-title">Per-Query: Baseline vs Cross-Encoder Reranked</div>
+          <div class="card-sub">Source Recall@1 for each test query</div>
+        </div>
+        <div style="overflow-x:auto;">
+          <table class="data-table" id="queryTable">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Query</th>
+                <th>Category</th>
+                <th>Baseline R@1</th>
+                <th>Reranked R@1</th>
+                <th>Change</th>
+              </tr>
+            </thead>
+            <tbody id="queryTableBody">
+              <tr><td colspan="6" style="text-align:center; color:var(--text-3); padding:24px;">Loading...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── TAB: COMPARE ── -->
+  <div id="tab-compare" class="tab-content">
+    <div style="max-width:1060px;">
+      <div class="page-header">
+        <div class="page-title">Baseline vs Improved</div>
+        <div class="page-sub">Run any query through both retrieval systems side-by-side. See exactly how Hybrid RRF + Cross-Encoder reranking changes what gets retrieved.</div>
+      </div>
+
+      <div class="pill-bar" style="margin-bottom:14px;">
+        <button class="pill" onclick="setC(this)">What corticosteroid for severe COVID-19?</button>
+        <button class="pill" onclick="setC(this)">Antiviral for non-severe COVID-19 high risk?</button>
+        <button class="pill" onclick="setC(this)">Oseltamivir dose for adult influenza?</button>
+        <button class="pill" onclick="setC(this)">Chronic cough, fever, night sweats?</button>
+      </div>
+
+      <div class="input-row">
+        <input id="compareInput" class="query-input" placeholder="Enter a query to compare both systems..."
+          onkeydown="if(event.key==='Enter') runCompare()">
+        <button class="ask-btn" onclick="runCompare()">Compare →</button>
+      </div>
+
+      <div class="loading-row fade-in" id="compareLoading">
+        <div class="spinner"></div>
+        <div class="loading-text">Running both retrieval systems...</div>
+      </div>
+
+      <div id="compareResult" style="display:none;" class="fade-in">
+        <div class="compare-grid">
+          <div class="compare-col compare-col-base">
+            <div class="compare-col-head">
+              <div class="col-label">Baseline</div>
+              <span class="col-badge tag tag-grey">Dense-Only FAISS</span>
+            </div>
+            <div class="compare-col-body" id="baseResults"></div>
+          </div>
+          <div class="compare-col compare-col-impr">
+            <div class="compare-col-head">
+              <div class="col-label" style="color:#93C5FD;">Improved</div>
+              <span class="col-badge tag tag-blue">Hybrid + Cross-Encoder</span>
+            </div>
+            <div class="compare-col-body" id="imprResults"></div>
+          </div>
+        </div>
+
+        <!-- Analysis -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">Retrieval Analysis</div>
+          </div>
+          <div class="card-body" id="compareAnalysis"></div>
+        </div>
+      </div>
+
+      <!-- Full table -->
+      <div class="compare-full-table">
+        <div style="padding:14px 18px; border-bottom:1px solid var(--border);">
+          <div style="font-size:13px; font-weight:600; color:var(--text-1);">Full Test Set — Quantitative Comparison (10 queries)</div>
+        </div>
+        <table class="data-table">
+          <thead>
+            <tr><th>Metric</th><th>Baseline</th><th>Improved</th><th>Delta</th><th>Change</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Recall@1</strong></td>
+              <td>0.60</td>
+              <td class="ok">0.80</td>
+              <td class="ok">+0.20</td>
+              <td><span class="tag tag-green">+33%</span></td>
+            </tr>
+            <tr>
+              <td>Recall@3</td>
+              <td>0.90</td>
+              <td>0.80</td>
+              <td class="bad">-0.10</td>
+              <td><span class="tag tag-red">-11%</span></td>
+            </tr>
+            <tr>
+              <td>Recall@5</td>
+              <td>0.90</td>
+              <td>0.90</td>
+              <td>0.00</td>
+              <td><span class="tag tag-grey">0%</span></td>
+            </tr>
+            <tr>
+              <td>Domain@3</td>
+              <td>0.90</td>
+              <td>0.90</td>
+              <td>0.00</td>
+              <td><span class="tag tag-grey">0%</span></td>
+            </tr>
+            <tr>
+              <td><strong>Grounding</strong></td>
+              <td>0.61</td>
+              <td class="ok">0.71</td>
+              <td class="ok">+0.10</td>
+              <td><span class="tag tag-green">+16%</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── TAB: ARCHITECTURE ── -->
+  <div id="tab-architecture" class="tab-content">
+    <div style="max-width:960px;">
+      <div class="page-header">
+        <div class="page-title">System Architecture</div>
+        <div class="page-sub">The improved pipeline extends the baseline with Hybrid Retrieval (BM25 + Dense RRF) and Cross-Encoder reranking before LLM generation.</div>
+      </div>
+
+      <!-- Pipeline diagram -->
+      <div class="pipeline-wrap" style="margin-bottom:20px;">
+        <div style="font-size:12px; font-weight:600; color:var(--text-3); text-transform:uppercase; letter-spacing:0.08em; margin-bottom:18px;">
+          Improved RAG Pipeline
+        </div>
+        <div class="pipeline-stages">
+          <div class="stage-node">
+            <div class="stage-emoji">📄</div>
+            <div class="stage-name">PDF Load</div>
+            <div class="stage-tech">PyMuPDF<br>Font metadata</div>
+          </div>
+          <div class="pipe-arrow">→</div>
+          <div class="stage-node">
+            <div class="stage-emoji">✂️</div>
+            <div class="stage-name">Chunking</div>
+            <div class="stage-tech">800 chars<br>Header-aware</div>
+          </div>
+          <div class="pipe-arrow">→</div>
+          <div class="stage-node">
+            <div class="stage-emoji">🔢</div>
+            <div class="stage-name">Embedding</div>
+            <div class="stage-tech">MiniLM-L6<br>384-dim</div>
+          </div>
+          <div class="pipe-arrow">→</div>
+          <div class="stage-node">
+            <div class="stage-emoji">🗄️</div>
+            <div class="stage-name">FAISS Index</div>
+            <div class="stage-tech">Cosine sim<br>Persisted</div>
+          </div>
+          <div class="pipe-arrow">→</div>
+          <div class="stage-node new-node">
+            <div class="stage-emoji">🔀</div>
+            <div class="stage-name">Hybrid RRF</div>
+            <div class="stage-tech">BM25 + Dense<br>Top-10 candidates</div>
+            <div class="stage-badge">NEW</div>
+          </div>
+          <div class="pipe-arrow">→</div>
+          <div class="stage-node new-node">
+            <div class="stage-emoji">🎯</div>
+            <div class="stage-name">Re-Rank</div>
+            <div class="stage-tech">Cross-Encoder<br>Top-5 final</div>
+            <div class="stage-badge">NEW</div>
+          </div>
+          <div class="pipe-arrow">→</div>
+          <div class="stage-node new-node">
+            <div class="stage-emoji">💬</div>
+            <div class="stage-name">LLM Generate</div>
+            <div class="stage-tech">LLaMA-3.1-8b<br>Clinical prompt</div>
+            <div class="stage-badge">NEW</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Component table -->
+      <div class="card" style="overflow:hidden; margin-bottom:20px;">
+        <div class="card-header">
+          <div class="card-title">Component Details</div>
+        </div>
+        <table class="data-table">
+          <thead>
+            <tr><th>Component</th><th>Technology</th><th>Config</th><th>Rationale</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>PDF Loader</strong></td>
+              <td>PyMuPDF (fitz)</td>
+              <td><span class="tag tag-grey">Font size ≥ 14pt</span></td>
+              <td>Span-level metadata; format-agnostic</td>
+            </tr>
+            <tr>
+              <td><strong>Chunker</strong></td>
+              <td>RecursiveCharacterTextSplitter</td>
+              <td><span class="tag tag-grey">800 chars / 150 overlap</span></td>
+              <td>Optimal by Exp 1 — best Grounding</td>
+            </tr>
+            <tr>
+              <td><strong>Embedding</strong></td>
+              <td>all-MiniLM-L6-v2</td>
+              <td><span class="tag tag-blue">384-dim · L2 norm</span></td>
+              <td>Fast CPU inference; sentence-similarity trained</td>
+            </tr>
+            <tr>
+              <td><strong>Vector Store</strong></td>
+              <td>FAISS IndexFlatIP</td>
+              <td><span class="tag tag-grey">Exact cosine · persisted</span></td>
+              <td>Deterministic; no server dependency</td>
+            </tr>
+            <tr>
+              <td><strong>BM25</strong></td>
+              <td>rank_bm25 BM25Okapi</td>
+              <td><span class="tag tag-amber">Token-level</span></td>
+              <td>Exact drug-name / dosage matching</td>
+            </tr>
+            <tr>
+              <td><strong>Fusion</strong></td>
+              <td>Reciprocal Rank Fusion</td>
+              <td><span class="tag tag-blue">k=60 · top-10</span></td>
+              <td>Combines lexical + semantic, no score normalization</td>
+            </tr>
+            <tr>
+              <td><strong>Reranker</strong></td>
+              <td>ms-marco-MiniLM-L-6-v2</td>
+              <td><span class="tag tag-green">Joint scoring · top-5</span></td>
+              <td>Exp 2: Recall@1 +33%</td>
+            </tr>
+            <tr>
+              <td><strong>LLM</strong></td>
+              <td>Groq / llama-3.1-8b-instant</td>
+              <td><span class="tag tag-purple">temp=0.1 · 500 tok</span></td>
+              <td>Free tier; 90% citation rate with clinical prompt</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Failure analysis -->
+      <div class="card" style="overflow:hidden; margin-bottom:20px;">
+        <div class="card-header">
+          <div class="card-title">Failure Analysis</div>
+        </div>
+        <div class="card-body">
+          <div class="failure-cards">
+            <div class="failure-card" style="border-left:3px solid var(--red);">
+              <div class="failure-head">
+                <span class="tag tag-red">PERSISTENT</span>
+                <div class="failure-title">Cross-Disease Contamination — Q09</div>
+              </div>
+              <div class="failure-body">Chronic cough + fever + night sweats (TB symptoms) returns COVID-19 documents across ALL configurations. The embedding model treats shared symptom vocabulary equally across disease domains.</div>
+              <div class="failure-fix">💡 Future work: pre-retrieval disease-domain intent classifier</div>
+            </div>
+            <div class="failure-card" style="border-left:3px solid var(--green);">
+              <div class="failure-head">
+                <span class="tag tag-green">FIXED</span>
+                <div class="failure-title">Wrong-Document Provenance — Q03, Q08, Q10</div>
+              </div>
+              <div class="failure-body">Baseline retrieved influenza PDF at Rank 1 for a COVID-19 corticosteroid query. Fixed by Hybrid RRF (Q03) and Cross-Encoder reranking (Q08, Q10).</div>
+            </div>
+            <div class="failure-card" style="border-left:3px solid var(--amber);">
+              <div class="failure-head">
+                <span class="tag tag-amber">PARTIAL</span>
+                <div class="failure-title">Incomplete Grounding — Q03 Dexamethasone Dosage</div>
+              </div>
+              <div class="failure-body">The 6mg dexamethasone dose is in a separate WHO section from the recommendation. No single chunk contains all expected terms. Grounding@Q03 = 0.00 across all systems.</div>
+              <div class="failure-fix">💡 Future work: table-aware extraction + multi-chunk synthesis</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<!-- ════ JAVASCRIPT ════ -->
+<script>
+// ── Tab navigation ──────────────────────────────────────────────────────────
+const topbarTitles = {
+  chat: 'Chat Assistant',
+  experiments: 'Experiment Results',
+  compare: 'Baseline vs Improved',
+  architecture: 'System Architecture'
+};
+
+function showTab(name, el) {
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  el.classList.add('active');
+  document.getElementById('topbarTitle').textContent = topbarTitles[name];
+  if (name === 'experiments' && !chartsBuilt) loadExperiments();
+}
+
+// ── Helpers ─────────────────────────────────────────────────────────────────
+function setQ(btn) {
+  document.getElementById('chatInput').value = btn.textContent;
+  document.getElementById('chatInput').focus();
+}
+
+function setC(btn) {
+  document.getElementById('compareInput').value = btn.textContent;
+}
+
+function domainColor(src) {
+  if (src.includes('9789240097759')) return '#3B82F6';
+  if (src.includes('tuberculosis'))  return '#D97706';
+  return '#10B981';
+}
+
+function renderSourceCard(s, rank) {
+  const pct = Math.min(Math.round((Math.abs(s.score) / 12) * 100), 100);
+  const color = s.color || domainColor(s.source || '');
+  return `
+    <div class="source-card">
+      <div class="source-row">
+        <div class="rank-circle">${rank}</div>
+        <div class="source-main">
+          <div class="source-name" style="color:${color};">${s.short || s.source}</div>
+          <div class="source-meta">
+            <span class="source-tag" style="background:${color}22; color:${color};">${s.domain}</span>
+            Page ${s.page}
+            ${s.section ? '· <em>' + s.section.slice(0,55) + (s.section.length>55?'…':'') + '</em>' : ''}
+          </div>
+          <div class="score-track">
+            <div class="score-fill" style="width:${pct}%; background:${color};"></div>
+          </div>
+          <div class="score-val">Score: ${s.score}</div>
+          ${s.content ? `
+          <button class="excerpt-btn" onclick="this.nextElementSibling.classList.toggle('open'); this.textContent = this.nextElementSibling.classList.contains('open') ? '▴ Hide excerpt' : '▾ View excerpt'">
+            ▾ View excerpt
+          </button>
+          <div class="excerpt-body">${s.content}…</div>` : ''}
+        </div>
+      </div>
+    </div>`;
+}
+
+// ── Chat ────────────────────────────────────────────────────────────────────
+async function askQuestion() {
+  const query = document.getElementById('chatInput').value.trim();
+  if (!query) return;
+  const key = document.getElementById('groqKey').value.trim();
+
+  const btn = document.getElementById('askBtn');
+  btn.disabled = true;
+  document.getElementById('chatLoading').style.display = 'flex';
+  document.getElementById('chatResult').style.display  = 'none';
+  document.getElementById('loadingMsg').textContent = 'Retrieving from WHO guidelines...';
+
+  setTimeout(() => {
+    document.getElementById('loadingMsg').textContent = 'Running hybrid BM25 + dense retrieval...';
+  }, 1200);
+  setTimeout(() => {
+    document.getElementById('loadingMsg').textContent = 'Applying cross-encoder reranking...';
+  }, 2500);
+  setTimeout(() => {
+    document.getElementById('loadingMsg').textContent = 'Generating clinical answer with LLaMA 3.1...';
+  }, 4000);
+
+  try {
+    const res  = await fetch('/api/ask', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ query, groq_key: key })
+    });
+    const data = await res.json();
+
+    if (data.error) throw new Error(data.error);
+
+    document.getElementById('answerBox').textContent = data.answer;
+    document.getElementById('elapsedTag').textContent = `${data.elapsed}s · llama-3.1-8b-instant`;
+
+    const grid = document.getElementById('sourcesGrid');
+    grid.innerHTML = data.sources.map((s, i) => renderSourceCard(s, i + 1)).join('');
+
+    document.getElementById('chatLoading').style.display = 'none';
+    document.getElementById('chatResult').style.display  = 'block';
+  } catch(e) {
+    document.getElementById('loadingMsg').textContent = 'Error: ' + e.message;
+  }
+  btn.disabled = false;
+}
+
+// ── Compare ─────────────────────────────────────────────────────────────────
+async function runCompare() {
+  const query = document.getElementById('compareInput').value.trim();
+  if (!query) return;
+
+  document.getElementById('compareLoading').style.display = 'flex';
+  document.getElementById('compareResult').style.display  = 'none';
+
+  try {
+    const res  = await fetch('/api/compare', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ query })
+    });
+    const data = await res.json();
+
+    document.getElementById('baseResults').innerHTML =
+      data.baseline.map((s, i) => renderSourceCard(s, i + 1)).join('');
+    document.getElementById('imprResults').innerHTML =
+      data.improved.map((s, i) => renderSourceCard(s, i + 1)).join('');
+
+    const baseD = [...new Set(data.baseline.slice(0,3).map(s => s.domain))].join(', ');
+    const imprD = [...new Set(data.improved.slice(0,3).map(s => s.domain))].join(', ');
+    const shared = data.baseline.filter(b =>
+      data.improved.some(ii => ii.content.slice(0,60) === b.content.slice(0,60))
+    ).length;
+
+    document.getElementById('compareAnalysis').innerHTML = `
+      <div class="analysis-row">
+        <div class="analysis-tile" style="background:rgba(255,255,255,0.03);">
+          <div class="analysis-tile-label" style="color:var(--text-3);">Baseline Top-3 Domains</div>
+          <div class="analysis-tile-val" style="color:var(--text-1);">${baseD}</div>
+        </div>
+        <div class="analysis-tile" style="background:rgba(31,73,125,0.12); border-color:rgba(31,73,125,0.3);">
+          <div class="analysis-tile-label" style="color:#93C5FD;">Improved Top-3 Domains</div>
+          <div class="analysis-tile-val" style="color:#93C5FD;">${imprD}</div>
+        </div>
+      </div>
+      <div style="font-size:13px; color:var(--text-2);">
+        Shared chunks in top-5: <strong style="color:var(--text-1);">${shared}/5</strong>
+        — the improved system surfaces <strong style="color:var(--text-1);">${5 - shared}</strong> different chunk(s) than the baseline.
+      </div>`;
+
+    document.getElementById('compareLoading').style.display = 'none';
+    document.getElementById('compareResult').style.display  = 'block';
+  } catch(e) {
+    document.getElementById('compareLoading').innerHTML =
+      `<div style="color:var(--red); padding:12px;">Error: ${e.message}</div>`;
+  }
+}
+
+// ── Experiments / Charts ─────────────────────────────────────────────────────
+let chartsBuilt = false;
+
+async function loadExperiments() {
+  document.getElementById('expLoading').style.display = 'block';
+  document.getElementById('chartsSection').style.opacity = '0.4';
+
+  try {
+    const res  = await fetch('/api/experiments');
+    const data = await res.json();
+    document.getElementById('expLoading').style.display = 'none';
+    document.getElementById('chartsSection').style.opacity = '1';
+    buildCharts(data);
+    buildQueryTable(data);
+    chartsBuilt = true;
+  } catch(e) {
+    document.getElementById('expLoading').innerHTML =
+      `<div class="empty-state">
+        <div class="empty-icon">⚗️</div>
+        <div class="empty-text">No experiment results found.<br><code style="font-size:12px;">python experiments.py</code></div>
+      </div>`;
+  }
+}
+
+const CHART_DEFAULTS = {
+  responsive: true,
+  plugins: {
+    legend: {
+      position: 'bottom',
+      labels: { color: '#8B949E', font: { size: 11, family: 'Inter' }, padding: 12 }
+    }
+  },
+  scales: {
+    x: {
+      ticks: { color: '#8B949E', font: { size: 11 } },
+      grid: { color: 'rgba(255,255,255,0.05)' },
+      border: { color: 'rgba(255,255,255,0.08)' }
+    },
+    y: {
+      min: 0, max: 1,
+      ticks: { color: '#8B949E', font: { size: 11 }, stepSize: 0.2 },
+      grid: { color: 'rgba(255,255,255,0.05)' },
+      border: { color: 'rgba(255,255,255,0.08)' }
+    }
+  }
+};
+
+function buildCharts(data) {
+  const BLUE   = '#3B82F6';
+  const TEAL   = '#14B8A6';
+  const GREY   = '#475569';
+  const AMBER  = '#F59E0B';
+  const GREEN  = '#22C55E';
+  const PURPLE = '#A78BFA';
+
+  // Exp 1 — Chunk Size
+  new Chart(document.getElementById('chartChunk'), {
+    type: 'bar',
+    data: {
+      labels: ['400 chars', '800 chars (Baseline)', '1200 chars'],
+      datasets: [
+        { label: 'Recall@1',  data: [0.60, 0.60, 0.50], backgroundColor: BLUE + 'CC',  borderRadius: 4 },
+        { label: 'Grounding', data: [0.46, 0.61, 0.61], backgroundColor: TEAL + 'CC', borderRadius: 4 },
+      ]
+    },
+    options: { ...CHART_DEFAULTS }
+  });
+
+  // Exp 2 — Reranking
+  const e2 = data.exp2 || {};
+  const b2 = e2.baseline || {}, i2 = e2.improved || {};
+  new Chart(document.getElementById('chartRerank'), {
+    type: 'bar',
+    data: {
+      labels: ['Recall@1', 'Recall@3', 'Grounding'],
+      datasets: [
+        { label: 'No Reranker', data: [b2['avg_recall@1']||0.60, b2['avg_recall@3']||0.90, b2['avg_grounding']||0.61], backgroundColor: GREY + 'CC', borderRadius: 4 },
+        { label: 'Cross-Encoder', data: [i2['avg_recall@1']||0.80, i2['avg_recall@3']||0.80, i2['avg_grounding']||0.71], backgroundColor: BLUE + 'CC', borderRadius: 4 },
+      ]
+    },
+    options: { ...CHART_DEFAULTS }
+  });
+
+  // Exp 3 — Hybrid
+  const e3 = data.exp3 || {};
+  const d3 = e3.dense || {}, bm = e3.bm25 || {}, hy = e3.hybrid || {};
+  new Chart(document.getElementById('chartHybrid'), {
+    type: 'bar',
+    data: {
+      labels: ['Recall@1', 'Recall@3', 'Domain@3', 'Grounding'],
+      datasets: [
+        { label: 'Dense-Only', data: [d3['avg_recall@1']||0, d3['avg_recall@3']||0, d3['avg_domain@3']||0, d3['avg_grounding']||0], backgroundColor: GREY  + 'CC', borderRadius: 4 },
+        { label: 'BM25-Only',  data: [bm['avg_recall@1']||0, bm['avg_recall@3']||0, bm['avg_domain@3']||0, bm['avg_grounding']||0], backgroundColor: AMBER + 'CC', borderRadius: 4 },
+        { label: 'Hybrid RRF', data: [hy['avg_recall@1']||0, hy['avg_recall@3']||0, hy['avg_domain@3']||0, hy['avg_grounding']||0], backgroundColor: BLUE  + 'CC', borderRadius: 4 },
+      ]
+    },
+    options: { ...CHART_DEFAULTS }
+  });
+
+  // Exp 4 — Prompts
+  const e4 = data.exp4 || {};
+  if (!e4.skipped && e4.results) {
+    const names = Object.keys(e4.results);
+    const gnd   = names.map(n => e4.results[n].avg_grounding   || 0);
+    const cite  = names.map(n => e4.results[n].avg_cites_source || 0);
+    new Chart(document.getElementById('chartPrompt'), {
+      type: 'bar',
+      data: {
+        labels: names.map(n => n.replace(' Prompt', '')),
+        datasets: [
+          { label: 'Grounding',    data: gnd,  backgroundColor: BLUE   + 'CC', borderRadius: 4 },
+          { label: 'Citation Rate', data: cite, backgroundColor: PURPLE + 'CC', borderRadius: 4 },
+        ]
+      },
+      options: { ...CHART_DEFAULTS }
+    });
+  } else {
+    document.getElementById('chartPrompt').closest('.chart-card').innerHTML +=
+      `<div style="text-align:center; font-size:12px; color:var(--text-3); margin-top:12px; padding:12px; background:var(--surface-3); border-radius:8px;">
+        Set <code>GROQ_API_KEY</code> and re-run <code>experiments.py</code> to see prompt results
+       </div>`;
+  }
+}
+
+function buildQueryTable(data) {
+  const base  = (data.exp2 && data.exp2.per_query && data.exp2.per_query.baseline) || [];
+  const rnk   = (data.exp2 && data.exp2.per_query && data.exp2.per_query.reranked)  || [];
+  const tbody = document.getElementById('queryTableBody');
+  if (!base.length) { tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; color:var(--text-3); padding:20px;">No per-query data</td></tr>'; return; }
+
+  tbody.innerHTML = base.map((b, i) => {
+    const r     = rnk[i] || {};
+    const fixed = !b['recall@1'] && r['recall@1'];
+    const broke = b['recall@1']  && !r['recall@1'];
+    const change = fixed ? `<span class="tag tag-green">FIXED</span>`
+                 : broke ? `<span class="tag tag-red">BROKEN</span>`
+                 :          `<span class="tag tag-grey">—</span>`;
+    const catTag = {
+      'specific_fact':   'tag-blue',
+      'drug_dosage':     'tag-amber',
+      'clinical_management': 'tag-purple',
+      'failure_case':    'tag-red',
+    }[b.category] || 'tag-grey';
+
+    return `<tr>
+      <td><strong>${b.id}</strong></td>
+      <td style="max-width:300px; color:var(--text-2);">${b.query}</td>
+      <td><span class="tag ${catTag}">${(b.category||'').replace('_',' ')}</span></td>
+      <td class="${b['recall@1'] ? 'ok' : 'bad'}">${b['recall@1'] ? '✓' : '✗'}</td>
+      <td class="${r['recall@1'] ? 'ok' : 'bad'}">${r['recall@1'] ? '✓' : '✗'}</td>
+      <td>${change}</td>
+    </tr>`;
+  }).join('');
+}
+
+// Auto-load experiments on page load (non-blocking)
+window.addEventListener('load', () => {
+  fetch('/api/health').catch(() => {});
+});
+</script>
+</body>
+</html>

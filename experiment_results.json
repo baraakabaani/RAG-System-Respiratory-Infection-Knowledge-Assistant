@@ -1,0 +1,1130 @@
+{
+  "exp1": {
+    "experiment": "Chunk Size",
+    "configs": [
+      {
+        "label": "Chunk-400",
+        "avg_recall@1": 0.6,
+        "avg_recall@3": 0.9,
+        "avg_recall@5": 0.9,
+        "avg_domain@3": 0.9,
+        "avg_sim@1": "0.54518884",
+        "avg_grounding": 0.4583333333333333
+      },
+      {
+        "label": "Chunk-800 (Baseline)",
+        "avg_recall@1": 0.6,
+        "avg_recall@3": 0.9,
+        "avg_recall@5": 0.9,
+        "avg_domain@3": 0.9,
+        "avg_sim@1": "0.5836212",
+        "avg_grounding": 0.6083333333333333
+      },
+      {
+        "label": "Chunk-1200",
+        "avg_recall@1": 0.5,
+        "avg_recall@3": 0.9,
+        "avg_recall@5": 0.9,
+        "avg_domain@3": 0.9,
+        "avg_sim@1": "0.6211413",
+        "avg_grounding": 0.6083333333333334
+      }
+    ],
+    "per_query": {
+      "Chunk-400": [
+        {
+          "id": "Q01",
+          "query": "What is the recommended oseltamivir dosage for an adult...",
+          "category": "dosage_lookup",
+          "recall@1": true,
+          "recall@3": true,
+          "recall@5": true,
+          "domain@3": true,
+          "sim@1": "0.31294134",
+          "grounding": 0.6666666666666666
+        },
+        {
+          "id": "Q02",
+          "query": "What is the standard first-line treatment duration for ...",
+          "category": "treatment_protocol",
+          "recall@1": true,
+          "recall@3": true,
+          "recall@5": true,
+          "domain@3": true,
+          "sim@1": "0.5982462",
+          "grounding": 0.25
+        },
+        {
+          "id": "Q03",
+          "query": "What corticosteroid is recommended for severe COVID-19 ...",
+          "category": "treatment_protocol",
+          "recall@1": false,
+          "recall@3": true,
+          "recall@5": true,
+          "domain@3": true,
+          "sim@1": "0.46605563",
+          "grounding": 0.0
+        },
+        {
+          "id": "Q04",
+          "query": "At what oxygen saturation level should supplemental oxy...",
+          "category": "clinical_threshold",
+          "recall@1": true,
+          "recall@3": true,
+          "recall@5": true,
+          "domain@3": true,
+          "sim@1": "0.87145007",
+          "grounding": 0.3333333333333333
+        },
+        {
+          "id": "Q05",
+          "query": "What is the WHO recommended dose of baloxavir marboxil ...",
+          "category": "dosage_lookup",
+          "recall@1": true,
+          "recall@3": true,
+          "recall@5": true,
+          "domain@3": true,
+          "sim@1": "0.5258201",
+          "grounding": 0.3333333333333333
+        },
+        {
+          "id": "Q06",
+          "query": "What is the oseltamivir dose for post-exposure prophyla...",
+          "category": "dosage_lookup",
+          "recall@1": true,
+          "recall@3": true,
+          "recall@5": true,
+          "domain@3": true,
+          "sim@1": "0.26607996",
+          "grounding": 1.0
+        },
+        {
+          "id": "Q07",
+          "query": "How should tuberculosis be diagnosed in children accord...",
+          "category": "diagnosis",
+          "recall@1": true,
+          "recall@3": true,
+          "recall@5": true,
+          "domain@3": true,
+          "sim@1": "0.5467145",
+          "grounding": 0.3333333333333333
+        },
+        {
+          "id": "Q08",
+          "query": "What antiviral is recommended for non-severe COVID-19 p...",
+          "category": "treatment_protocol",
+          "recall@1": false,
+          "recall@3": true,
+          "recall@5": true,
+          "domain@3": true,
+          "sim@1": "0.4664497",
+          "grounding": 1.0
+        },
+        {
+          "id": "Q09",
+          "query": "How should I manage a patient with chronic cough fever ...",
+          "category": "failure_case",
+          "recall@1": false,
+          "recall@3": false,
+          "recall@5": false,
+          "domain@3": false,
+          "sim@1": "1.0048771",
+          "grounding": 0.3333333333333333
+        },
+        {
+          "id": "Q10",
+          "query": "What infection prevention and control measures are requ...",
+          "category": "clinical_protocol",
+          "recall@1": false,
+          "recall@3": true,
+          "recall@5": true,
+          "domain@3": true,
+          "sim@1": "0.3932544",
+          "grounding": 0.3333333333333333
+        }
+      ],
+      "Chunk-800 (Baseline)": [
+        {
+          "id": "Q01",
+          "query": "What is the recommended oseltamivir dosage for an adult...",
+          "category": "dosage_lookup",
+          "recall@1": true,
+          "recall@3": true,
+          "recall@5": true,
+          "domain@3": true,
+          "sim@1": "0.31272447",
+          "grounding": 1.0
+        },
+        {
+          "id": "Q02",
+          "query": "What is the standard first-line treatment duration for ...",
+          "category": "treatment_protocol",
+          "recall@1": true,
+          "recall@3": true,
+          "recall@5": true,
+          "domain@3": true,
+          "sim@1": "0.680522",
+          "grounding": 0.75
+        },
+        {
+          "id": "Q03",
+          "query": "What corticosteroid is recommended for severe COVID-19 ...",
+          "category": "treatment_protocol",
+          "recall@1": false,
+          "recall@3": true,
+          "recall@5": true,
+          "domain@3": true,
+          "sim@1": "0.5161384",
+          "grounding": 0.0
+        },
+        {
+          "id": "Q04",
+          "query": "At what oxygen saturation level should supplemental oxy...",
+          "category": "clinical_threshold",
+          "recall@1": true,
+          "recall@3": true,
+          "recall@5": true,
+          "domain@3": true,
+          "sim@1": "0.9785001",
+          "grounding": 0.3333333333333333
+        },
+        {
+          "id": "Q05",
+          "query": "What is the WHO recommended dose of baloxavir marboxil ...",
+          "category": "dosage_lookup",
+          "recall@1": true,
+          "recall@3": true,
+          "recall@5": true,
+          "domain@3": true,
+          "sim@1": "0.51054287",
+          "grounding": 0.3333333333333333
+        },
+        {
+          "id": "Q06",
+          "query": "What is the oseltamivir dose for post-exposure prophyla...",
+          "category": "dosage_lookup",
+          "recall@1": true,
+          "recall@3": true,
+          "recall@5": true,
+          "domain@3": true,
+          "sim@1": "0.30854428",
+          "grounding": 1.0
+        },
+        {
+          "id": "Q07",
+          "query": "How should tuberculosis be diagnosed in children accord...",
+          "category": "diagnosis",
+          "recall@1": true,
+          "recall@3": true,
+          "recall@5": true,
+          "domain@3": true,
+          "sim@1": "0.6011084",
+          "grounding": 0.3333333333333333
+        },
+        {
+          "id": "Q08",
+          "query": "What antiviral is recommended for non-severe COVID-19 p...",
+          "category": "treatment_protocol",
+          "recall@1": false,
+          "recall@3": true,
+          "recall@5": true,
+          "domain@3": true,
+          "sim@1": "0.5439706",
+          "grounding": 1.0
+        },
+        {
+          "id": "Q09",
+          "query": "How should I manage a patient with chronic cough fever ...",
+          "category": "failure_case",
+          "recall@1": false,
+          "recall@3": false,
+          "recall@5": false,
+          "domain@3": false,
+          "sim@1": "1.0037866",
+          "grounding": 0.3333333333333333
+        },
+        {
+          "id": "Q10",
+          "query": "What infection prevention and control measures are requ...",
+          "category": "clinical_protocol",
+          "recall@1": false,
+          "recall@3": true,
+          "recall@5": true,
+          "domain@3": true,
+          "sim@1": "0.38037437",
+          "grounding": 1.0
+        }
+      ],
+      "Chunk-1200": [
+        {
+          "id": "Q01",
+          "query": "What is the recommended oseltamivir dosage for an adult...",
+          "category": "dosage_lookup",
+          "recall@1": true,
+          "recall@3": true,
+          "recall@5": true,
+          "domain@3": true,
+          "sim@1": "0.37553036",
+          "grounding": 1.0
+        },
+        {
+          "id": "Q02",
+          "query": "What is the standard first-line treatment duration for ...",
+          "category": "treatment_protocol",
+          "recall@1": true,
+          "recall@3": true,
+          "recall@5": true,
+          "domain@3": true,
+          "sim@1": "0.680522",
+          "grounding": 0.75
+        },
+        {
+          "id": "Q03",
+          "query": "What corticosteroid is recommended for severe COVID-19 ...",
+          "category": "treatment_protocol",
+          "recall@1": false,
+          "recall@3": true,
+          "recall@5": true,
+          "domain@3": true,
+          "sim@1": "0.6560688",
+          "grounding": 0.0
+        },
+        {
+          "id": "Q04",
+          "query": "At what oxygen saturation level should supplemental oxy...",
+          "category": "clinical_threshold",
+          "recall@1": false,
+          "recall@3": true,
+          "recall@5": true,
+          "domain@3": true,
+          "sim@1": "0.9771314",
+          "grounding": 0.3333333333333333
+        },
+        {
+          "id": "Q05",
+          "query": "What is the WHO recommended dose of baloxavir marboxil ...",
+          "category": "dosage_lookup",
+          "recall@1": true,
+          "recall@3": true,
+          "recall@5": true,
+          "domain@3": true,
+          "sim@1": "0.61152256",
+          "grounding": 0.3333333333333333
+        },
+        {
+          "id": "Q06",
+          "query": "What is the oseltamivir dose for post-exposure prophyla...",
+          "category": "dosage_lookup",
+          "recall@1": true,
+          "recall@3": true,
+          "recall@5": true,
+          "domain@3": true,
+          "sim@1": "0.3106385",
+          "grounding": 1.0
+        },
+        {
+          "id": "Q07",
+          "query": "How should tuberculosis be diagnosed in children accord...",
+          "category": "diagnosis",
+          "recall@1": true,
+          "recall@3": true,
+          "recall@5": true,
+          "domain@3": true,
+          "sim@1": "0.6011084",
+          "grounding": 0.6666666666666666
+        },
+        {
+          "id": "Q08",
+          "query": "What antiviral is recommended for non-severe COVID-19 p...",
+          "category": "treatment_protocol",
+          "recall@1": false,
+          "recall@3": true,
+          "recall@5": true,
+          "domain@3": true,
+          "sim@1": "0.61473024",
+          "grounding": 1.0
+        },
+        {
+          "id": "Q09",
+          "query": "How should I manage a patient with chronic cough fever ...",
+          "category": "failure_case",
+          "recall@1": false,
+          "recall@3": false,
+          "recall@5": false,
+          "domain@3": false,
+          "sim@1": "1.0037866",
+          "grounding": 0.3333333333333333
+        },
+        {
+          "id": "Q10",
+          "query": "What infection prevention and control measures are requ...",
+          "category": "clinical_protocol",
+          "recall@1": false,
+          "recall@3": true,
+          "recall@5": true,
+          "domain@3": true,
+          "sim@1": "0.38037437",
+          "grounding": 0.6666666666666666
+        }
+      ]
+    }
+  },
+  "exp2": {
+    "experiment": "Cross-Encoder Reranking",
+    "baseline": {
+      "label": "No Reranker (Baseline)",
+      "avg_recall@1": 0.6,
+      "avg_recall@3": 0.9,
+      "avg_recall@5": 0.9,
+      "avg_domain@3": 0.9,
+      "avg_sim@1": "0.5836212",
+      "avg_grounding": 0.6083333333333333
+    },
+    "improved": {
+      "label": "Cross-Encoder Reranked",
+      "avg_recall@1": 0.8,
+      "avg_recall@3": 0.8,
+      "avg_recall@5": 0.9,
+      "avg_domain@3": 0.9,
+      "avg_sim@1": 4.063774454593658,
+      "avg_grounding": 0.7083333333333333
+    },
+    "per_query": {
+      "baseline": [
+        {
+          "id": "Q01",
+          "query": "What is the recommended oseltamivir dosage for an adult...",
+          "category": "dosage_lookup",
+          "recall@1": true,
+          "recall@3": true,
+          "recall@5": true,
+          "domain@3": true,
+          "sim@1": "0.31272447",
+          "grounding": 1.0
+        },
+        {
+          "id": "Q02",
+          "query": "What is the standard first-line treatment duration for ...",
+          "category": "treatment_protocol",
+          "recall@1": true,
+          "recall@3": true,
+          "recall@5": true,
+          "domain@3": true,
+          "sim@1": "0.680522",
+          "grounding": 0.75
+        },
+        {
+          "id": "Q03",
+          "query": "What corticosteroid is recommended for severe COVID-19 ...",
+          "category": "treatment_protocol",
+          "recall@1": false,
+          "recall@3": true,
+          "recall@5": true,
+          "domain@3": true,
+          "sim@1": "0.5161384",
+          "grounding": 0.0
+        },
+        {
+          "id": "Q04",
+          "query": "At what oxygen saturation level should supplemental oxy...",
+          "category": "clinical_threshold",
+          "recall@1": true,
+          "recall@3": true,
+          "recall@5": true,
+          "domain@3": true,
+          "sim@1": "0.9785001",
+          "grounding": 0.3333333333333333
+        },
+        {
+          "id": "Q05",
+          "query": "What is the WHO recommended dose of baloxavir marboxil ...",
+          "category": "dosage_lookup",
+          "recall@1": true,
+          "recall@3": true,
+          "recall@5": true,
+          "domain@3": true,
+          "sim@1": "0.51054287",
+          "grounding": 0.3333333333333333
+        },
+        {
+          "id": "Q06",
+          "query": "What is the oseltamivir dose for post-exposure prophyla...",
+          "category": "dosage_lookup",
+          "recall@1": true,
+          "recall@3": true,
+          "recall@5": true,
+          "domain@3": true,
+          "sim@1": "0.30854428",
+          "grounding": 1.0
+        },
+        {
+          "id": "Q07",
+          "query": "How should tuberculosis be diagnosed in children accord...",
+          "category": "diagnosis",
+          "recall@1": true,
+          "recall@3": true,
+          "recall@5": true,
+          "domain@3": true,
+          "sim@1": "0.6011084",
+          "grounding": 0.3333333333333333
+        },
+        {
+          "id": "Q08",
+          "query": "What antiviral is recommended for non-severe COVID-19 p...",
+          "category": "treatment_protocol",
+          "recall@1": false,
+          "recall@3": true,
+          "recall@5": true,
+          "domain@3": true,
+          "sim@1": "0.5439706",
+          "grounding": 1.0
+        },
+        {
+          "id": "Q09",
+          "query": "How should I manage a patient with chronic cough fever ...",
+          "category": "failure_case",
+          "recall@1": false,
+          "recall@3": false,
+          "recall@5": false,
+          "domain@3": false,
+          "sim@1": "1.0037866",
+          "grounding": 0.3333333333333333
+        },
+        {
+          "id": "Q10",
+          "query": "What infection prevention and control measures are requ...",
+          "category": "clinical_protocol",
+          "recall@1": false,
+          "recall@3": true,
+          "recall@5": true,
+          "domain@3": true,
+          "sim@1": "0.38037437",
+          "grounding": 1.0
+        }
+      ],
+      "reranked": [
+        {
+          "id": "Q01",
+          "query": "What is the recommended oseltamivir dosage for an adult...",
+          "category": "dosage_lookup",
+          "recall@1": true,
+          "recall@3": true,
+          "recall@5": true,
+          "domain@3": true,
+          "sim@1": 7.696099281311035,
+          "grounding": 0.6666666666666666
+        },
+        {
+          "id": "Q02",
+          "query": "What is the standard first-line treatment duration for ...",
+          "category": "treatment_protocol",
+          "recall@1": true,
+          "recall@3": true,
+          "recall@5": true,
+          "domain@3": true,
+          "sim@1": 3.823209524154663,
+          "grounding": 0.75
+        },
+        {
+          "id": "Q03",
+          "query": "What corticosteroid is recommended for severe COVID-19 ...",
+          "category": "treatment_protocol",
+          "recall@1": false,
+          "recall@3": false,
+          "recall@5": true,
+          "domain@3": true,
+          "sim@1": 5.8534955978393555,
+          "grounding": 0.0
+        },
+        {
+          "id": "Q04",
+          "query": "At what oxygen saturation level should supplemental oxy...",
+          "category": "clinical_threshold",
+          "recall@1": true,
+          "recall@3": true,
+          "recall@5": true,
+          "domain@3": true,
+          "sim@1": -0.8439546823501587,
+          "grounding": 0.6666666666666666
+        },
+        {
+          "id": "Q05",
+          "query": "What is the WHO recommended dose of baloxavir marboxil ...",
+          "category": "dosage_lookup",
+          "recall@1": true,
+          "recall@3": true,
+          "recall@5": true,
+          "domain@3": true,
+          "sim@1": 5.403206825256348,
+          "grounding": 1.0
+        },
+        {
+          "id": "Q06",
+          "query": "What is the oseltamivir dose for post-exposure prophyla...",
+          "category": "dosage_lookup",
+          "recall@1": true,
+          "recall@3": true,
+          "recall@5": true,
+          "domain@3": true,
+          "sim@1": 9.034723281860352,
+          "grounding": 1.0
+        },
+        {
+          "id": "Q07",
+          "query": "How should tuberculosis be diagnosed in children accord...",
+          "category": "diagnosis",
+          "recall@1": true,
+          "recall@3": true,
+          "recall@5": true,
+          "domain@3": true,
+          "sim@1": 2.1439170837402344,
+          "grounding": 0.6666666666666666
+        },
+        {
+          "id": "Q08",
+          "query": "What antiviral is recommended for non-severe COVID-19 p...",
+          "category": "treatment_protocol",
+          "recall@1": true,
+          "recall@3": true,
+          "recall@5": true,
+          "domain@3": true,
+          "sim@1": 8.142366409301758,
+          "grounding": 1.0
+        },
+        {
+          "id": "Q09",
+          "query": "How should I manage a patient with chronic cough fever ...",
+          "category": "failure_case",
+          "recall@1": false,
+          "recall@3": false,
+          "recall@5": false,
+          "domain@3": false,
+          "sim@1": -7.511555194854736,
+          "grounding": 0.3333333333333333
+        },
+        {
+          "id": "Q10",
+          "query": "What infection prevention and control measures are requ...",
+          "category": "clinical_protocol",
+          "recall@1": true,
+          "recall@3": true,
+          "recall@5": true,
+          "domain@3": true,
+          "sim@1": 6.896236419677734,
+          "grounding": 1.0
+        }
+      ]
+    }
+  },
+  "exp3": {
+    "experiment": "Hybrid Retrieval",
+    "dense": {
+      "label": "Dense-Only (Baseline)",
+      "avg_recall@1": 0.6,
+      "avg_recall@3": 0.9,
+      "avg_recall@5": 0.9,
+      "avg_domain@3": 0.9,
+      "avg_sim@1": "0.5836212",
+      "avg_grounding": 0.6083333333333333
+    },
+    "bm25": {
+      "label": "BM25-Only",
+      "avg_recall@1": 0.6,
+      "avg_recall@3": 0.7,
+      "avg_recall@5": 0.8,
+      "avg_domain@3": 0.7,
+      "avg_sim@1": 19.39316713384498,
+      "avg_grounding": 0.3166666666666667
+    },
+    "hybrid": {
+      "label": "Hybrid BM25+Dense (RRF)",
+      "avg_recall@1": 0.7,
+      "avg_recall@3": 0.9,
+      "avg_recall@5": 0.9,
+      "avg_domain@3": 0.9,
+      "avg_sim@1": 0.03308306941162993,
+      "avg_grounding": 0.6083333333333333
+    },
+    "per_query": {
+      "dense": [
+        {
+          "id": "Q01",
+          "query": "What is the recommended oseltamivir dosage for an adult...",
+          "category": "dosage_lookup",
+          "recall@1": true,
+          "recall@3": true,
+          "recall@5": true,
+          "domain@3": true,
+          "sim@1": "0.31272447",
+          "grounding": 1.0
+        },
+        {
+          "id": "Q02",
+          "query": "What is the standard first-line treatment duration for ...",
+          "category": "treatment_protocol",
+          "recall@1": true,
+          "recall@3": true,
+          "recall@5": true,
+          "domain@3": true,
+          "sim@1": "0.680522",
+          "grounding": 0.75
+        },
+        {
+          "id": "Q03",
+          "query": "What corticosteroid is recommended for severe COVID-19 ...",
+          "category": "treatment_protocol",
+          "recall@1": false,
+          "recall@3": true,
+          "recall@5": true,
+          "domain@3": true,
+          "sim@1": "0.5161384",
+          "grounding": 0.0
+        },
+        {
+          "id": "Q04",
+          "query": "At what oxygen saturation level should supplemental oxy...",
+          "category": "clinical_threshold",
+          "recall@1": true,
+          "recall@3": true,
+          "recall@5": true,
+          "domain@3": true,
+          "sim@1": "0.9785001",
+          "grounding": 0.3333333333333333
+        },
+        {
+          "id": "Q05",
+          "query": "What is the WHO recommended dose of baloxavir marboxil ...",
+          "category": "dosage_lookup",
+          "recall@1": true,
+          "recall@3": true,
+          "recall@5": true,
+          "domain@3": true,
+          "sim@1": "0.51054287",
+          "grounding": 0.3333333333333333
+        },
+        {
+          "id": "Q06",
+          "query": "What is the oseltamivir dose for post-exposure prophyla...",
+          "category": "dosage_lookup",
+          "recall@1": true,
+          "recall@3": true,
+          "recall@5": true,
+          "domain@3": true,
+          "sim@1": "0.30854428",
+          "grounding": 1.0
+        },
+        {
+          "id": "Q07",
+          "query": "How should tuberculosis be diagnosed in children accord...",
+          "category": "diagnosis",
+          "recall@1": true,
+          "recall@3": true,
+          "recall@5": true,
+          "domain@3": true,
+          "sim@1": "0.6011084",
+          "grounding": 0.3333333333333333
+        },
+        {
+          "id": "Q08",
+          "query": "What antiviral is recommended for non-severe COVID-19 p...",
+          "category": "treatment_protocol",
+          "recall@1": false,
+          "recall@3": true,
+          "recall@5": true,
+          "domain@3": true,
+          "sim@1": "0.5439706",
+          "grounding": 1.0
+        },
+        {
+          "id": "Q09",
+          "query": "How should I manage a patient with chronic cough fever ...",
+          "category": "failure_case",
+          "recall@1": false,
+          "recall@3": false,
+          "recall@5": false,
+          "domain@3": false,
+          "sim@1": "1.0037866",
+          "grounding": 0.3333333333333333
+        },
+        {
+          "id": "Q10",
+          "query": "What infection prevention and control measures are requ...",
+          "category": "clinical_protocol",
+          "recall@1": false,
+          "recall@3": true,
+          "recall@5": true,
+          "domain@3": true,
+          "sim@1": "0.38037437",
+          "grounding": 1.0
+        }
+      ],
+      "bm25": [
+        {
+          "id": "Q01",
+          "query": "What is the recommended oseltamivir dosage for an adult...",
+          "category": "dosage_lookup",
+          "recall@1": true,
+          "recall@3": true,
+          "recall@5": true,
+          "domain@3": true,
+          "sim@1": 16.900535118955094,
+          "grounding": 0.3333333333333333
+        },
+        {
+          "id": "Q02",
+          "query": "What is the standard first-line treatment duration for ...",
+          "category": "treatment_protocol",
+          "recall@1": true,
+          "recall@3": true,
+          "recall@5": true,
+          "domain@3": true,
+          "sim@1": 16.56431133502343,
+          "grounding": 0.5
+        },
+        {
+          "id": "Q03",
+          "query": "What corticosteroid is recommended for severe COVID-19 ...",
+          "category": "treatment_protocol",
+          "recall@1": false,
+          "recall@3": false,
+          "recall@5": true,
+          "domain@3": false,
+          "sim@1": 20.05797892708324,
+          "grounding": 0.0
+        },
+        {
+          "id": "Q04",
+          "query": "At what oxygen saturation level should supplemental oxy...",
+          "category": "clinical_threshold",
+          "recall@1": true,
+          "recall@3": true,
+          "recall@5": true,
+          "domain@3": true,
+          "sim@1": 21.528870386129924,
+          "grounding": 0.6666666666666666
+        },
+        {
+          "id": "Q05",
+          "query": "What is the WHO recommended dose of baloxavir marboxil ...",
+          "category": "dosage_lookup",
+          "recall@1": true,
+          "recall@3": true,
+          "recall@5": true,
+          "domain@3": true,
+          "sim@1": 22.832210272394555,
+          "grounding": 0.3333333333333333
+        },
+        {
+          "id": "Q06",
+          "query": "What is the oseltamivir dose for post-exposure prophyla...",
+          "category": "dosage_lookup",
+          "recall@1": true,
+          "recall@3": true,
+          "recall@5": true,
+          "domain@3": true,
+          "sim@1": 26.712165762770727,
+          "grounding": 0.6666666666666666
+        },
+        {
+          "id": "Q07",
+          "query": "How should tuberculosis be diagnosed in children accord...",
+          "category": "diagnosis",
+          "recall@1": true,
+          "recall@3": true,
+          "recall@5": true,
+          "domain@3": true,
+          "sim@1": 13.834195423176144,
+          "grounding": 0.3333333333333333
+        },
+        {
+          "id": "Q08",
+          "query": "What antiviral is recommended for non-severe COVID-19 p...",
+          "category": "treatment_protocol",
+          "recall@1": false,
+          "recall@3": false,
+          "recall@5": false,
+          "domain@3": false,
+          "sim@1": 15.45544622102265,
+          "grounding": 0.0
+        },
+        {
+          "id": "Q09",
+          "query": "How should I manage a patient with chronic cough fever ...",
+          "category": "failure_case",
+          "recall@1": false,
+          "recall@3": false,
+          "recall@5": false,
+          "domain@3": false,
+          "sim@1": 13.937941645085083,
+          "grounding": 0.0
+        },
+        {
+          "id": "Q10",
+          "query": "What infection prevention and control measures are requ...",
+          "category": "clinical_protocol",
+          "recall@1": false,
+          "recall@3": true,
+          "recall@5": true,
+          "domain@3": true,
+          "sim@1": 26.10801624680896,
+          "grounding": 0.3333333333333333
+        }
+      ],
+      "hybrid": [
+        {
+          "id": "Q01",
+          "query": "What is the recommended oseltamivir dosage for an adult...",
+          "category": "dosage_lookup",
+          "recall@1": true,
+          "recall@3": true,
+          "recall@5": true,
+          "domain@3": true,
+          "sim@1": 0.031754032258064516,
+          "grounding": 1.0
+        },
+        {
+          "id": "Q02",
+          "query": "What is the standard first-line treatment duration for ...",
+          "category": "treatment_protocol",
+          "recall@1": true,
+          "recall@3": true,
+          "recall@5": true,
+          "domain@3": true,
+          "sim@1": 0.046724324975892,
+          "grounding": 0.75
+        },
+        {
+          "id": "Q03",
+          "query": "What corticosteroid is recommended for severe COVID-19 ...",
+          "category": "treatment_protocol",
+          "recall@1": true,
+          "recall@3": true,
+          "recall@5": true,
+          "domain@3": true,
+          "sim@1": 0.031009615384615385,
+          "grounding": 0.0
+        },
+        {
+          "id": "Q04",
+          "query": "At what oxygen saturation level should supplemental oxy...",
+          "category": "clinical_threshold",
+          "recall@1": true,
+          "recall@3": true,
+          "recall@5": true,
+          "domain@3": true,
+          "sim@1": 0.03131881575727918,
+          "grounding": 0.6666666666666666
+        },
+        {
+          "id": "Q05",
+          "query": "What is the WHO recommended dose of baloxavir marboxil ...",
+          "category": "dosage_lookup",
+          "recall@1": true,
+          "recall@3": true,
+          "recall@5": true,
+          "domain@3": true,
+          "sim@1": 0.01639344262295082,
+          "grounding": 0.3333333333333333
+        },
+        {
+          "id": "Q06",
+          "query": "What is the oseltamivir dose for post-exposure prophyla...",
+          "category": "dosage_lookup",
+          "recall@1": true,
+          "recall@3": true,
+          "recall@5": true,
+          "domain@3": true,
+          "sim@1": 0.032266458495966696,
+          "grounding": 0.6666666666666666
+        },
+        {
+          "id": "Q07",
+          "query": "How should tuberculosis be diagnosed in children accord...",
+          "category": "diagnosis",
+          "recall@1": true,
+          "recall@3": true,
+          "recall@5": true,
+          "domain@3": true,
+          "sim@1": 0.060429644494613764,
+          "grounding": 0.6666666666666666
+        },
+        {
+          "id": "Q08",
+          "query": "What antiviral is recommended for non-severe COVID-19 p...",
+          "category": "treatment_protocol",
+          "recall@1": false,
+          "recall@3": true,
+          "recall@5": true,
+          "domain@3": true,
+          "sim@1": 0.01639344262295082,
+          "grounding": 1.0
+        },
+        {
+          "id": "Q09",
+          "query": "How should I manage a patient with chronic cough fever ...",
+          "category": "failure_case",
+          "recall@1": false,
+          "recall@3": false,
+          "recall@5": false,
+          "domain@3": false,
+          "sim@1": 0.031754032258064516,
+          "grounding": 0.3333333333333333
+        },
+        {
+          "id": "Q10",
+          "query": "What infection prevention and control measures are requ...",
+          "category": "clinical_protocol",
+          "recall@1": false,
+          "recall@3": true,
+          "recall@5": true,
+          "domain@3": true,
+          "sim@1": 0.03278688524590164,
+          "grounding": 0.6666666666666666
+        }
+      ]
+    }
+  },
+  "exp4": {
+    "experiment": "Prompt Design",
+    "results": {
+      "Generic Prompt": {
+        "rows": [
+          {
+            "id": "Q01",
+            "query": "What is the recommended oseltamivir dosage for an ...",
+            "grounding": 1.0,
+            "cites_source": true,
+            "appropriate_refusal": null,
+            "answer_preview": "According to the provided information, for an adult with confirmed influenza, the recommended dosage of oseltamivir is 75 mg twice daily for 5 days. This is based on the information from page 102 of t"
+          },
+          {
+            "id": "Q02",
+            "query": "What is the standard first-line treatment duration...",
+            "grounding": 0.75,
+            "cites_source": false,
+            "appropriate_refusal": null,
+            "answer_preview": "According to the provided information, the standard first-line treatment duration for drug-susceptible tuberculosis is 6 months."
+          },
+          {
+            "id": "Q03",
+            "query": "What corticosteroid is recommended for severe COVI...",
+            "grounding": 0.0,
+            "cites_source": true,
+            "appropriate_refusal": null,
+            "answer_preview": "Unfortunately, the provided documents do not specify a particular corticosteroid recommended for severe COVID-19 or its recommended dose. They do mention corticosteroids as a treatment option for seve"
+          },
+          {
+            "id": "Q04",
+            "query": "At what oxygen saturation level should supplementa...",
+            "grounding": 0.33,
+            "cites_source": true,
+            "appropriate_refusal": null,
+            "answer_preview": "The provided documents do not explicitly state the oxygen saturation level at which supplemental oxygen should be started in COVID-19. However, they do provide information on oxygenation impairment in"
+          },
+          {
+            "id": "Q05",
+            "query": "What is the WHO recommended dose of baloxavir marb...",
+            "grounding": 0.33,
+            "cites_source": true,
+            "appropriate_refusal": null,
+            "answer_preview": "Unfortunately, the provided information does not explicitly mention the WHO-recommended dose of baloxavir marboxil for influenza treatment. However, it does mention that baloxavir is given orally as a"
+          }
+        ],
+        "avg_grounding": 0.48,
+        "avg_cites_source": 0.8
+      },
+      "Clinical Structured Prompt": {
+        "rows": [
+          {
+            "id": "Q01",
+            "query": "What is the recommended oseltamivir dosage for an ...",
+            "grounding": 1.0,
+            "cites_source": true,
+            "appropriate_refusal": null,
+            "answer_preview": "Based on the provided WHO guidelines, the recommended oseltamivir dosage for an adult with confirmed influenza is 75 mg twice daily for 5 days. \n\nSource: [9789240097759-eng.pdf, p.102]\n\nThis informati"
+          },
+          {
+            "id": "Q02",
+            "query": "What is the standard first-line treatment duration...",
+            "grounding": 0.75,
+            "cites_source": true,
+            "appropriate_refusal": null,
+            "answer_preview": "According to the provided WHO guidelines, the standard treatment duration for drug-susceptible tuberculosis is 6 months. \n\nSource: [evidence-gaps-and-research-needs-identified-during-tuberculosis-poli"
+          },
+          {
+            "id": "Q03",
+            "query": "What corticosteroid is recommended for severe COVI...",
+            "grounding": 0.0,
+            "cites_source": true,
+            "appropriate_refusal": null,
+            "answer_preview": "Based on the provided WHO guidelines, the recommended corticosteroids for severe COVID-19 are not explicitly stated. However, corticosteroids are mentioned as one of the treatments for severe COVID-19"
+          },
+          {
+            "id": "Q04",
+            "query": "At what oxygen saturation level should supplementa...",
+            "grounding": 0.33,
+            "cites_source": true,
+            "appropriate_refusal": null,
+            "answer_preview": "According to the provided WHO guidelines, supplemental oxygen should be started when the SpO2/FiO2 ratio is \u2264 264 or when the PaO2/FiO2 ratio is \u2264 300 mmHg. \n\nSource: [clinical-management-of-novel-cov"
+          },
+          {
+            "id": "Q05",
+            "query": "What is the WHO recommended dose of baloxavir marb...",
+            "grounding": 0.33,
+            "cites_source": true,
+            "appropriate_refusal": null,
+            "answer_preview": "According to the provided WHO guidelines, the recommended dose of baloxavir marboxil for influenza treatment is not explicitly stated. However, it is mentioned that baloxavir is given orally as a sing"
+          }
+        ],
+        "avg_grounding": 0.48,
+        "avg_cites_source": 1.0
+      },
+      "Chain-of-Thought Prompt": {
+        "rows": [
+          {
+            "id": "Q01",
+            "query": "What is the recommended oseltamivir dosage for an ...",
+            "grounding": 1.0,
+            "cites_source": true,
+            "appropriate_refusal": null,
+            "answer_preview": "To answer the question, I will follow the steps you provided:\n\n1. **Identify the disease domain**: This question relates to the disease domain of influenza.\n\n2. **Locate the most relevant guideline se"
+          },
+          {
+            "id": "Q02",
+            "query": "What is the standard first-line treatment duration...",
+            "grounding": 0.75,
+            "cites_source": true,
+            "appropriate_refusal": null,
+            "answer_preview": "To answer the question, I will follow the steps you provided:\n\n1. **Identify the disease domain**: This question relates to Tuberculosis (TB).\n\n2. **Locate the most relevant guideline section**: The m"
+          },
+          {
+            "id": "Q03",
+            "query": "What corticosteroid is recommended for severe COVI...",
+            "grounding": 0.0,
+            "cites_source": true,
+            "appropriate_refusal": null,
+            "answer_preview": "To answer the question, I will follow the steps you provided.\n\n1. **Identify the disease domain**: The question relates to COVID-19.\n\n2. **Locate the most relevant guideline section**: The most releva"
+          },
+          {
+            "id": "Q04",
+            "query": "At what oxygen saturation level should supplementa...",
+            "grounding": 0.33,
+            "cites_source": true,
+            "appropriate_refusal": null,
+            "answer_preview": "To answer the question, I will follow the steps you provided:\n\n1. **Identify the disease domain**: This question relates to COVID-19.\n\n2. **Locate the most relevant guideline section**: The most relev"
+          },
+          {
+            "id": "Q05",
+            "query": "What is the WHO recommended dose of baloxavir marb...",
+            "grounding": 0.33,
+            "cites_source": true,
+            "appropriate_refusal": null,
+            "answer_preview": "To answer the question, I will follow the steps you provided:\n\n1. **Identify the disease domain**: This question relates to the disease domain of influenza.\n\n2. **Locate the most relevant guideline se"
+          }
+        ],
+        "avg_grounding": 0.48,
+        "avg_cites_source": 1.0
+      }
+    }
+  }
+}

@@ -1,0 +1,37 @@
+# FAISS indexes (large binary files - rebuild with experiments.py)
+idx_400/
+idx_1200/
+idx_improved/
+faiss_index/
+
+# WHO PDFs dataset (large files, publicly available from WHO website)
+dataset/
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+
+# Virtual environment
+venv/
+env/
+.venv/
+
+# API keys and environment variables
+.env
+*.env
+secrets.py
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editor folders
+.vscode/
+.idea/
+
+# Jupyter
+.ipynb_checkpoints/
